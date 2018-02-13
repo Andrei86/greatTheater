@@ -1,0 +1,130 @@
+package bootsamples.service;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Service;
+
+import bootsamples.dao.SeanceRepository;
+import bootsamples.exceptions.notFound.MyResourceNotFoundException;
+import bootsamples.model.Seance;
+
+
+/**
+ * @author Andrei Shalkevich
+ *
+ */
+@Service
+@Transactional
+public class SeanceService {
+
+	private final SeanceRepository seanceRepository;
+	
+	private final MovieService movieService;
+	
+	private final CinemaService cinemaService;
+	
+	private Date endDate = null; // next day after searching date- я не уверен, что для 
+	//каждого пользователя будет создаваться своя копия переменной endDte!! И если так, то 
+	// перенести ее в Controller
+
+	public SeanceService(SeanceRepository seanceRepository, MovieService movieService,
+			CinemaService cinemaService) {
+		
+		this.seanceRepository = seanceRepository;
+		this.movieService = movieService;
+		this.cinemaService = cinemaService;
+	}
+	
+	//@Async - для метода, который поддерживает многопоточность, а @EnableAsync - для класса, котрый использует многопоточные методы
+	public List<Seance> findSeanceByMovieDate(String movieTitle, Date date)// need Guava
+	{
+		
+		endDate = new Date(date.getTime() + 86400000);// можно просто +1 - сутки
+
+		List<Seance> seances = new ArrayList<Seance>();
+		List<Seance> seancesFound = seanceRepository.findByMovieDate(movieTitle, date, endDate);
+		if(seancesFound.isEmpty())
+			throw new MyResourceNotFoundException(String.format("seances satisfying the search criteria not found"));
+		
+		for(Seance seance : seancesFound)
+		{
+			seances.add(seance);
+		}
+		
+		return seances;
+	}
+	
+	public List<Seance> findSeanceByCinemaDate(String cinemaName, Date date)// need Guava
+	{
+		
+		endDate = new Date(date.getTime() + 86400000);// можно просто +1
+
+		List<Seance> seances = new ArrayList<Seance>();
+		List<Seance> seancesFound = seanceRepository.findByCinemaDate(cinemaName, date, endDate);
+		if(seancesFound.isEmpty())
+			throw new MyResourceNotFoundException(String.format("seances satisfying the search criteria not found"));
+		
+		for(Seance seance : seancesFound)
+		{
+			seances.add(seance);
+		}
+		
+		return seances;
+	}
+	
+	public List<Seance> findSeanceByDate(Date date)// need Guava
+	{
+		
+		endDate = new Date(date.getTime() + 86400000);// можно просто +1
+
+		List<Seance> seances = new ArrayList<Seance>();
+		List<Seance> seancesFound = seanceRepository.findByDate(date, endDate);
+		if(seancesFound.isEmpty())
+			throw new MyResourceNotFoundException(String.format("seances satisfying the search criteria not found"));
+		
+		for(Seance seance : seancesFound)
+		{
+			seances.add(seance);
+		}
+		
+		return seances;
+	}
+	
+	public Seance findSeanceById(Integer id)
+	{
+		
+		Seance seance = seanceRepository.findOne(id);
+		
+		if (seance == null) {
+			throw new MyResourceNotFoundException(String.format("seance with id= %s not found", id));
+		}
+		
+		return seance;
+	}
+	
+	public void deleteSeanceById(Integer id)
+	{
+		findSeanceById(id);
+		seanceRepository.delete(id);
+	}
+	
+	public Seance updateSeance(Seance seance)
+	{
+		return seanceRepository.save(seance);
+
+	}
+	
+	public Seance createSeance(Seance seance)
+	{
+		
+		cinemaService.findCinemaByName(seance.getCinema().getName());
+		movieService.findMovieByTitle(seance.getMovie().getTitle());
+		return seanceRepository.save(seance);
+
+	}
+
+}
