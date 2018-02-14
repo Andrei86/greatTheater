@@ -109,6 +109,10 @@
     		<groupId>junit</groupId>
     		<artifactId>junit</artifactId>
     	</plugin>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
     </plugins>
   </build>
   <version>0.0.1</version>
