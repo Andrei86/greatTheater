@@ -1,9 +1,13 @@
 package bootsamples.service;
 
+import org.springframework.cache.annotation.Cacheable;
+
 import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,6 +17,7 @@ import bootsamples.dao.CategoryCostRepository;
 import bootsamples.exceptions.duplicate.DuplicateEntityException;
 import bootsamples.exceptions.notFound.MyResourceNotFoundException;
 import bootsamples.model.CategoryCost;
+import ch.qos.logback.classic.Logger;
 
 /**
  * @author Andrei Shalkevich
@@ -22,6 +27,8 @@ import bootsamples.model.CategoryCost;
 @Transactional
 public class CategoryCostService {
 	
+	private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(CategoryCostService.class);
+	
 	private final CategoryCostRepository categoryRepo;
 	
 	public CategoryCostService(CategoryCostRepository categoryRepo) {
@@ -29,7 +36,11 @@ public class CategoryCostService {
 		this.categoryRepo = categoryRepo;
 	}
 	
+	@Cacheable("categories")
 	public CategoryCost findCategoryCostByCategory(Category category) {
+		
+		LOGGER.info("Find CategoryCost by category = {} ", category.name());
+		
 		CategoryCost categoryCost = categoryRepo.findByCategory(category);
 
 		if (categoryCost == null) {
@@ -38,9 +49,12 @@ public class CategoryCostService {
 
 		return categoryCost;
 	}
-
+	
+	//@Cacheable("categories")
 	public CategoryCost findCategoryCostById(Integer id) {
-
+		
+		LOGGER.info("Find CategoryCost by id = {} ", id);
+		
 		CategoryCost categoryCost = categoryRepo.findOne(id);
 
 		if (categoryCost == null) {
