@@ -18,8 +18,9 @@ import bootsamples.model.Customer;
  *
  */
 @Service
-@Transactional
 public class CustomerService {
+	
+	private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(CustomerService.class);
 
 	private final CustomerRepository customerRepository;
 
@@ -27,9 +28,12 @@ public class CustomerService {
 		this.customerRepository = customerRepo;
 	}
 	
+	
 	public Customer findCustomerByLogin(String login)
 	{
-
+		
+		LOGGER.info("Find customer by login = {} ", login);
+		
 		Customer customer = customerRepository.findByLogin(login);
 
 		if (customer == null) {
@@ -41,6 +45,8 @@ public class CustomerService {
 	}
 	
 	public Customer findCustomerById(Integer id) {
+		
+		LOGGER.info("Find customer by id = {} ", id);
 
 		Customer customer = customerRepository.findOne(id);
 
@@ -53,7 +59,9 @@ public class CustomerService {
 	}
 	
 	public List<Customer> findAllCustomers(Pageable pageable) {
-
+		
+		LOGGER.info("Find all customers");
+		
 		List<Customer> customers = null;
 
 		Page<Customer> page = customerRepository.findAll(pageable);
@@ -63,12 +71,20 @@ public class CustomerService {
 		return customers;
 	}
 	
+	@Transactional
 	public void deleteCustomerById(Integer id) {
+		
+		LOGGER.info("Delete customer by id = {} ", id);
+		
 		findCustomerById(id);
 		customerRepository.delete(id);
 	}
 	
+	@Transactional
 	public Customer createCustomer(Customer customer) {
+		
+		LOGGER.info("Create customer with login = {} ", customer.getLogin());
+		
 		try {
 			findCustomerByLogin(customer.getLogin());
 		} catch (MyResourceNotFoundException e) {
@@ -77,7 +93,11 @@ public class CustomerService {
 		throw new DuplicateEntityException(String.format("There is login %s already reserved", customer.getLogin()));
 	}
 	
+	@Transactional
 	public Customer updateCustomer(Customer customer) {
+		
+		LOGGER.info("Update customer with id = {} ", customer.getId());
+		
 		return customerRepository.save(customer);
 
 	}
