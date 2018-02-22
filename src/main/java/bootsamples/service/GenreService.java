@@ -19,8 +19,9 @@ import bootsamples.model.Genre;
  *
  */
 @Service
-@Transactional
 public class GenreService {
+	
+	private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(GenreService.class);
 
 	private final GenreRepository genreRepository;
 
@@ -29,6 +30,9 @@ public class GenreService {
 	}
 	
 	public Genre findGenreByName(String name){
+		
+		LOGGER.info("Find genre by name = {} ", name);
+		
 		Genre genre = genreRepository.findByName(name);
 		
 		if (genre == null) {
@@ -39,6 +43,8 @@ public class GenreService {
 	}
 	
 	public Genre findGenreById(Integer id){
+		
+		LOGGER.info("Find genre by id = {} ", id);
 		
 		Genre genre = genreRepository.findOne(id);
 		
@@ -51,6 +57,8 @@ public class GenreService {
 	public List<Genre> findAllGenres(Pageable pageable)
 	{
 		
+		LOGGER.info("Find all genres");
+		
 		List<Genre> genres = null;
 		
 		Page<Genre> page = genreRepository.findAll(pageable);
@@ -61,20 +69,30 @@ public class GenreService {
 		return genres;
 	}
 	
+	@Transactional
 	public void deleteGenreById(Integer id)
 	{
+		
+		LOGGER.info("Delete genre by id = {} ", id);
+		
 		findGenreById(id);
 		
 		genreRepository.delete(id);
 	}
 	
+	@Transactional
 	public void deleteAllGenres()
 	{
+		LOGGER.info("Delete all genres");
+		
 		genreRepository.deleteAll();
 	}
 	
+	@Transactional
 	public Genre createGenre(Genre genre)
 	{
+		LOGGER.info("Create genre with name = {} ", genre.getName());
+		
 		try{
 		findGenreByName(genre.getName());
 		}catch(MyResourceNotFoundException e)
@@ -85,9 +103,11 @@ public class GenreService {
 		
 	}
 	
+	@Transactional
 	public Genre updateGenre(Genre genre)
 	{
-	
+		LOGGER.info("Update genre with id = {} ", genre.getId());
+		
 		return genreRepository.save(genre);
 		
 	}
