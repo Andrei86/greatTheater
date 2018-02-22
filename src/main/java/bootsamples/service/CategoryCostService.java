@@ -24,7 +24,6 @@ import ch.qos.logback.classic.Logger;
  *
  */
 @Service
-@Transactional
 public class CategoryCostService {
 	
 	private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(CategoryCostService.class);
@@ -36,7 +35,7 @@ public class CategoryCostService {
 		this.categoryRepo = categoryRepo;
 	}
 	
-	@Cacheable("categories")
+	@Cacheable(value = "category", key = "#category")
 	public CategoryCost findCategoryCostByCategory(Category category) {
 		
 		LOGGER.info("Find CategoryCost by category = {} ", category.name());
@@ -50,7 +49,7 @@ public class CategoryCostService {
 		return categoryCost;
 	}
 	
-	//@Cacheable("categories")
+	@Cacheable(value = "category", key = "#id")
 	public CategoryCost findCategoryCostById(Integer id) {
 		
 		LOGGER.info("Find CategoryCost by id = {} ", id);
@@ -63,8 +62,11 @@ public class CategoryCostService {
 		return categoryCost;
 	}
 
+	@Cacheable(value = "category")
 	public List<CategoryCost> findAllCategoryCosts(Pageable pageable) {
-
+		
+		LOGGER.info("Find all CategoryCosts");
+		
 		List<CategoryCost> categoryCosts = null;
 
 		Page<CategoryCost> page = categoryRepo.findAll(pageable);
@@ -73,28 +75,51 @@ public class CategoryCostService {
 
 		return categoryCosts;
 	}
-
+	
+	@Transactional
+	@CacheEvict(value = "category", key = "#id")
 	public void deleteCategoryCostById(Integer id) {
+		
+		LOGGER.info("Delete CategoryCost by id = {} ", id);
+		
 		findCategoryCostById(id);
 
 		categoryRepo.delete(id);
 	}
-
+	
+	@Transactional
+	@CacheEvict(value = "category",  allEntries = true)
 	public void deleteAllCategoryCosts() {
+		
+		LOGGER.info("Delete all CategoryCosts");
+		
 		categoryRepo.deleteAll();
 	}
-
+	
+	@Transactional
+	@CachePut(value = "categories")
 	public CategoryCost createCategoryCost(CategoryCost categoryCost) {
+		
+		LOGGER.info("Create CategoryCost with category = {} and cost = {}", categoryCost.getCategory(), categoryCost.getCost());
+		
 		try {
 			findCategoryCostByCategory(categoryCost.getCategory());
 		} catch (MyResourceNotFoundException e) {
 			return categoryRepo.save(categoryCost);
 		}
-		throw new DuplicateEntityException("There is already such category cost object exist");
+		throw new DuplicateEntityException("There is already such categoryCost object exist");
 
 	}
-
+	
+	@Transactional
+	@Caching( put = {
+        @CachePut(value = "category", key = "#id"),
+        @CachePut(value = "category", key = "#category")
+	
+	})
 	public CategoryCost updateCategoryCost(CategoryCost categoryCost) {
+		
+		LOGGER.info("Update CategoryCost with id = {}", categoryCost.getId());
 
 		return categoryRepo.save(categoryCost);
 
