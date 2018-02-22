@@ -21,10 +21,10 @@ import bootsamples.model.Cinema;
  *
  */
 @Service
-@Transactional
 public class CinemaService {
 	
-	//private final Logger logger = LoggerFactory.getLogger(CinemaService.class);// настроить
+	private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(CinemaService.class);
+	
 	private final CinemaRepository cinemaRepository;
 	private final SchemaService schemaService;
 	
@@ -34,7 +34,9 @@ public class CinemaService {
 	}
 	
 	public List<Cinema> findCinemaByCity(String city) {
-
+		
+		LOGGER.info("Find cinema by city = {}", city);
+		
 		List<Cinema> cinemas = new ArrayList<>();
 		List<Cinema> cinemasDB = cinemaRepository.findByCity(city);
 
@@ -50,6 +52,9 @@ public class CinemaService {
 	}
 	
 	public Cinema findCinemaByName(String name) {
+		
+		LOGGER.info("Find cinema by name = {}", name);
+		
 		Cinema cinema = cinemaRepository.findByName(name);
 
 		if (cinema == null) {
@@ -60,7 +65,8 @@ public class CinemaService {
 	
 	public Cinema findCinemaById(Integer id) {
 
-		// logger.debug("Find city by id");
+		LOGGER.info("Find cinema by id = {}", id);
+		
 		Cinema cinema = cinemaRepository.findOne(id);
 
 		if (cinema == null) {
@@ -70,7 +76,9 @@ public class CinemaService {
 	}
 
 	public List<Cinema> findAllCinemas(Pageable pageable) {
-
+		
+		LOGGER.info("Find all cinemas");
+		
 		List<Cinema> cinemas = null;
 
 		Page<Cinema> page = cinemaRepository.findAll(pageable);
@@ -80,13 +88,21 @@ public class CinemaService {
 		return cinemas;
 	}
 	
+	@Transactional
 	public void deleteCinemaById(Integer id) {
+		
+		LOGGER.info("Delete cinema by id = {}", id);
+		
 		findCinemaById(id);
 
 		cinemaRepository.delete(id);
 	}
 	
+	@Transactional
 	public Cinema createCinema(Cinema cinema) {
+		
+		LOGGER.info("Create cinema with name = {}", cinema.getName());
+		
 		String schemaName = cinema.getCinemaSchema().getName();
 
 		try {
@@ -100,11 +116,19 @@ public class CinemaService {
 		throw new DuplicateEntityException("There is already such cinema object exist");
 	}
 	
+	@Transactional
 	public Cinema updateCinema(Cinema cinema) {
+		
+		LOGGER.info("Update cinema with id = {}", cinema.getId());
+		
 		return cinemaRepository.save(cinema);
 	}
 	
+	@Transactional
 	public void deleteAllCinemas() {
+		
+		LOGGER.info("Delete all cinemas");
+		
 		cinemaRepository.deleteAll();
 	}
 	
