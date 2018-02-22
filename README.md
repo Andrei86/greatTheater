@@ -1,6 +1,6 @@
 # greatTheater
 
-	Booking service for cinema places(ENG)
+	                Booking service for cinema places(ENG)
 
 	Customer chooses places for certain seance. Before booking he will have to register and/or authenticate. 
 Booking ends one hour before seance statring. Booked place(s) have to be redeemed in cashbox min one hour before 
