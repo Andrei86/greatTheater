@@ -21,8 +21,9 @@ import bootsamples.model.Movie;
  *
  */
 @Service
-@Transactional
 public class MovieService {
+	
+	private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(MovieService.class);
 
 	private final MovieRepository movieRepository;
 	private final GenreService genreService;
@@ -33,6 +34,9 @@ public class MovieService {
 	}
 	
 	public Movie findMovieById(Integer id) {
+		
+		LOGGER.info("Find movie by id = {} ", id);
+		
 		Movie movie = movieRepository.findOne(id);
 
 		if (movie == null) {
@@ -43,7 +47,9 @@ public class MovieService {
 	}
 	
 	public Movie findMovieByTitle(String title) {
-
+		
+		LOGGER.info("Find movie by title = {} ", title);
+		
 		Movie movie = movieRepository.findByTitle(title);
 
 		if (movie == null) {
@@ -54,6 +60,8 @@ public class MovieService {
 	}
 	
 	public List<Movie> findAllMovies(Pageable pageable) {
+		
+		LOGGER.info("Find all movies");
 
 		List<Movie> movies = null;
 
@@ -64,13 +72,21 @@ public class MovieService {
 		return movies;
 	}
 	
+	@Transactional
 	public void deleteMovieById(Integer id) {
+		
+		LOGGER.info("Delete movie by id = {} ", id);
+		
 		findMovieById(id);
 
 		movieRepository.delete(id);
 	}
-
+	
+	@Transactional
 	public Movie createMovie(Movie movie) {
+		
+		LOGGER.info("Create movie with title = {} ", movie.getTitle());
+		
 		List<Genre> genres = movie.getGenres();
 
 		try {
@@ -86,16 +102,25 @@ public class MovieService {
 		throw new DuplicateEntityException("There is already such movie object exist");
 	}
 	
+	@Transactional
 	public Movie updateMovie(Movie movie) {
-
+		
+		LOGGER.info("Update movie with id = {} ", movie.getId());
+		
 		return movieRepository.save(movie);
 	}
 	
+	@Transactional
 	public void deleteAllMovies() {
+		
+		LOGGER.info("Delete all movies");
+		
 		movieRepository.deleteAll();
 	}
 	
 	public List<Movie> findMoviesByDate(Date date){
+		
+		LOGGER.info("Find movie by date = {} ", date);
 		
 		List<Movie> movies = movieRepository.findByDate(date);
 		
