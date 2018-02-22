@@ -24,8 +24,9 @@ import bootsamples.model.Place;
  *
  */
 @Service
-@Transactional
 public class PlaceService {
+	
+	private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(PlaceService.class);
 
 	private final PlaceRepository placeRepository;
 	
@@ -45,6 +46,8 @@ public class PlaceService {
 	
 	public Place findPlaceById(Integer id)
 	{
+		LOGGER.info("Find place by id = {} ", id);
+		
 		Place place = placeRepository.findOne(id);
 		
 		if (place == null) {
@@ -57,6 +60,8 @@ public class PlaceService {
 	//объединить поиск, попробовав @Query Т.К. МНОГО ПОВТОРЯЮЩЕГОСЯ КОДА!!!!! еще попробовать searchFilter
 	public List<Place> findPlacesBySeanceId(Integer id){
 		
+		LOGGER.info("Find places by seance's id = {} ", id);
+		
 		List<Place> places = placeRepository.findBySeanceId(id);
 		
 		if(places.isEmpty())
@@ -68,6 +73,8 @@ public class PlaceService {
 	
 	// переделаю под findByCustomerLogin, чтобы в url был не id, а login?
 	public List<Place> findPlacesByCustomerId(Integer id){
+		
+		LOGGER.info("Find places by customer's id = {} ", id);
 		
 		customerService.findCustomerById(id);
 		List<Place> places = placeRepository.findByCustomerId(id);
@@ -103,8 +110,11 @@ public class PlaceService {
 	 * 
 	 * Бронирование заканчивается за 1 час до начала сеанса для любого зарегистрированного пользователя
 	 */
+	@Transactional
 	public Place changeStatusToBooked(Integer placeId)//, Integer customerId)
 	{
+		LOGGER.info("Change status to Booked to place with id = {} ", placeId);
+		
 		Place place = findPlaceById(placeId);
 		
 		Date now = new Date();
@@ -128,8 +138,11 @@ public class PlaceService {
 	 * Любой зарегистрированный пользователь с правами USER может отменять СВОЙ забронированный билет мин за 1 час до нач сеанса,
 	 * а пользователь администратор может освобождать ЛЮБОЙ забронированный билет в любое время
 	 */
+	@Transactional
 	public Place changeStatusToFree(Integer placeId, Integer customerId) // может админ отменять в любое время
 	{
+		LOGGER.info("Change status to Free to place with id = {} by customer with id = {}", placeId, customerId);
+		
 		Place place = findPlaceById(placeId);
 		
 		Customer loggedInCustomer = customerService.findCustomerById(customerId);
@@ -160,9 +173,11 @@ public class PlaceService {
 	/*
 	 * Только админ (кассир) может продавать билеты и соотв менять статус на busy (c free or booked status) в кассе
 	 */
+	@Transactional
 	 public Place changeStatusToBusy(Integer placeId, Integer customerId) // может админ отменять в любое время
 	{
-		
+		LOGGER.info("Change status to Busy to place with id = {} by customer with id = {}", placeId, customerId);
+		 
 		Place place = findPlaceById(placeId);
 		
 		Status placeStatus = place.getStatus();
@@ -183,32 +198,36 @@ public class PlaceService {
 		return place;
 	} 
 	
+	@Transactional
 	public void deletePlaceById(Integer id)
 	{
+		
+		
 		findPlaceById(id);
 		placeRepository.delete(id);
 	}
 	
-	
+	@Transactional
 	public Place createPlace(Place place)
 	{
 		seanceService.findSeanceById(place.getSeance().getId());
 		return placeRepository.save(place);
-
 	}
 	
+	@Transactional
 	public Place updatePlace(Place place)
 	{
 		return placeRepository.save(place);
-
 	}
 	
+	@Transactional
 	public List<Place> updatePlaces(List<Place> places) // ordinary places updating
 	{
 		return (List<Place>) placeRepository.save(places);
 
 	}
 	
+	@Transactional
 	public Place bookingPlace(Integer placeId, Integer customerId) // single reservation
 	{
 		Customer customer = customerService.findCustomerById(customerId); // это типа аутентификация!!! будет
@@ -220,6 +239,7 @@ public class PlaceService {
 
 	}
 	
+	@Transactional
 	public List<Place> bookingPlaces(List<Integer> placeIds, Integer customerId) // reservation
 	{
 		Customer customer = customerService.findCustomerById(customerId);
@@ -238,6 +258,7 @@ public class PlaceService {
 
 	}
 	
+	@Transactional
 	public Place cancellingPlace(Integer placeId, Integer customerId) {
 
 		Place place = changeStatusToFree(placeId, customerId);
@@ -246,6 +267,7 @@ public class PlaceService {
 
 	}
 	
+	@Transactional
 	public List<Place> cancellingPlaces(List<Integer> placeIds, Integer customerId) // cancellations?
 	{
 
@@ -263,6 +285,7 @@ public class PlaceService {
 
 	}
 	
+	@Transactional
 	public Place busyPlace(Integer placeId, Integer customerId) {
 
 		Place place = changeStatusToBusy(placeId, customerId);
@@ -271,7 +294,7 @@ public class PlaceService {
 
 	}
 	 
-	 
+	@Transactional 
 	public List<Place> busyPlaces(List<Integer> placeIds, Integer customerId) {
 		List<Place> busyPlaces = new ArrayList<>();
 
