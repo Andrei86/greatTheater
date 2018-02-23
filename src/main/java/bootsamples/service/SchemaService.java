@@ -24,8 +24,9 @@ import bootsamples.model.CinemaSchema;
  *
  */
 @Service
-@Transactional
 public class SchemaService {
+	
+	private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(SchemaService.class);
 
 	private final CinemaSchemaRepository cinemaSchemaRepository;
 
@@ -34,6 +35,9 @@ public class SchemaService {
 	}
 
 	public CinemaSchema findSchemaByName(String name) {
+		
+		LOGGER.info("Find schema by name = {} ", name);
+		
 		CinemaSchema schema = cinemaSchemaRepository.findByName(name);
 
 		if (schema == null) {
@@ -44,6 +48,9 @@ public class SchemaService {
 	}
 	
 	public CinemaSchema findSchemaById(Integer id) {
+		
+		LOGGER.info("Find schema by id = {} ", id);
+		
 		CinemaSchema schema = cinemaSchemaRepository.findOne(id);
 
 		if (schema == null) {
@@ -54,6 +61,8 @@ public class SchemaService {
 	}
 
 	public List<CinemaSchema> findAllSchemas(Pageable pageable) {
+		
+		LOGGER.info("Find all schemas");
 
 		List<CinemaSchema> schemas = null;
 
@@ -63,8 +72,12 @@ public class SchemaService {
 
 		return schemas;
 	}
-
+	
+	@Transactional
 	public void deleteSchemaById(Integer id) {
+		
+		LOGGER.info("Delete schema by id = {} ", id);
+		
 		findSchemaById(id);
 		
 		/*try{*/
@@ -74,7 +87,10 @@ public class SchemaService {
 		}*/
 	}
 	
+	@Transactional
 	public CinemaSchema createSchema(CinemaSchema cinemaSchema) {
+		
+		LOGGER.info("Create schema with name = {} ", cinemaSchema.getName());
 
 		try {
 			findSchemaByName(cinemaSchema.getName());
@@ -85,11 +101,19 @@ public class SchemaService {
 				String.format("There is already cinema schema object exist with name= %s", cinemaSchema.getName()));
 	}
 	
+	@Transactional
 	public CinemaSchema updateSchema(CinemaSchema cinemaSchema) {
+		
+		LOGGER.info("Update schema with id = {} ", cinemaSchema.getId());
+		
 		return cinemaSchemaRepository.save(cinemaSchema);
 	}
-
+	
+	@Transactional
 	public void deleteAllSchemas() {
+		
+		LOGGER.info("Delete all schemas");
+		
 		cinemaSchemaRepository.deleteAll();
 	}
 
