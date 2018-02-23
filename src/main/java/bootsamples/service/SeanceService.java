@@ -18,9 +18,10 @@ import bootsamples.model.Seance;
  *
  */
 @Service
-@Transactional
 public class SeanceService {
-
+	
+	private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(SeanceService.class);
+	
 	private final SeanceRepository seanceRepository;
 	
 	private final MovieService movieService;
@@ -43,6 +44,8 @@ public class SeanceService {
 	public List<Seance> findSeanceByMovieDate(String movieTitle, Date date)// need Guava
 	{
 		
+		LOGGER.info("Find seance by movie title = {}  and date = {}", movieTitle,  date);
+		
 		endDate = new Date(date.getTime() + 86400000);// можно просто +1 - сутки
 
 		List<Seance> seances = new ArrayList<Seance>();
@@ -60,6 +63,7 @@ public class SeanceService {
 	
 	public List<Seance> findSeanceByCinemaDate(String cinemaName, Date date)// need Guava
 	{
+		LOGGER.info("Find seance by cinema name = {}  and date = {}", cinemaName,  date);
 		
 		endDate = new Date(date.getTime() + 86400000);// можно просто +1
 
@@ -78,6 +82,7 @@ public class SeanceService {
 	
 	public List<Seance> findSeanceByDate(Date date)// need Guava
 	{
+		LOGGER.info("Find seance by date = {}", date);
 		
 		endDate = new Date(date.getTime() + 86400000);// можно просто +1
 
@@ -96,6 +101,7 @@ public class SeanceService {
 	
 	public Seance findSeanceById(Integer id)
 	{
+		LOGGER.info("Find seance by id = {}", id);
 		
 		Seance seance = seanceRepository.findOne(id);
 		
@@ -106,20 +112,29 @@ public class SeanceService {
 		return seance;
 	}
 	
+	@Transactional
 	public void deleteSeanceById(Integer id)
 	{
+		LOGGER.info("Delete seance by id = {}", id);
+		
 		findSeanceById(id);
 		seanceRepository.delete(id);
 	}
 	
+	@Transactional
 	public Seance updateSeance(Seance seance)
 	{
+		LOGGER.info("Update seance with id = {}", seance.getId());
+		
 		return seanceRepository.save(seance);
 
 	}
 	
+	@Transactional
 	public Seance createSeance(Seance seance)
 	{
+		LOGGER.info("Create seance on for movie title = {} in cinema = {} at date = {}", seance.getMovie().getTitle(),
+			   seance.getCinema().getName()), seance.getDate();
 		
 		cinemaService.findCinemaByName(seance.getCinema().getName());
 		movieService.findMovieByTitle(seance.getMovie().getTitle());
