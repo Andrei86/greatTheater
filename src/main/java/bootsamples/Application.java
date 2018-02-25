@@ -47,10 +47,14 @@ public class Application implements CommandLineRunner {
 	@Autowired
     private ApplicationContext appContext;
 	
-	@Bean
+	/*@Bean
+	CacheManager cacheManager() {
+	   return new RedisCacheManager(redisTemplate());*/
+	
+	/*@Bean
     CacheManager cacheManager() {
       return new ConcurrentMapCacheManager();
-    }
+    }*/
 	
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder(){

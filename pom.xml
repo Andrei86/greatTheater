@@ -35,12 +35,6 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-data-redis</artifactId>
 	</dependency>
-	
-	<dependency>
-		<groupId>redis.clients</groupId>
-		<artifactId>jedis</artifactId>
-		<version>2.9.0</version>
-	</dependency>
 
 	<dependency>
 		<groupId>org.springframework.boot</groupId>
@@ -51,20 +45,10 @@
 	
 	
 	<dependency>
-	<groupId>org.hamcrest</groupId>
-	<artifactId>hamcrest-core</artifactId>
-	<scope>test</scope>
-</dependency>
-
-	<dependency>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-jdbc</artifactId>
+		<groupId>org.hamcrest</groupId>
+		<artifactId>hamcrest-core</artifactId>
+		<scope>test</scope>
 	</dependency>
-    
-<!--     <dependency>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-jpa</artifactId>
-	</dependency> -->
 
 	<dependency>
 		<groupId>org.hsqldb</groupId>
@@ -104,11 +88,6 @@
     <groupId>org.postgresql</groupId>
     <artifactId>postgresql</artifactId>
     </dependency>
-    
-<!--     <dependency>
-    <groupId>com.google.code.gson</groupId>
-    <artifactId>gson</artifactId>
-    </dependency> -->
     
     <dependency>
     <groupId>org.projectlombok</groupId>

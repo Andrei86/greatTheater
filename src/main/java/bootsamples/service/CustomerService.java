@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import bootsamples.dao.CustomerRepository;
 import bootsamples.exceptions.duplicate.DuplicateEntityException;
 import bootsamples.exceptions.notFound.MyResourceNotFoundException;
 import bootsamples.model.Customer;
+import ch.qos.logback.classic.Logger;
 
 /**
  * @author Andrei Shalkevich

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ import bootsamples.exceptions.IntegrityViolationException;
 import bootsamples.exceptions.duplicate.DuplicateEntityException;
 import bootsamples.exceptions.notFound.MyResourceNotFoundException;
 import bootsamples.model.CinemaSchema;
+import ch.qos.logback.classic.Logger;
 
 /**
  * @author Andrei Shalkevich

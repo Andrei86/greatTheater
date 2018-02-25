@@ -6,11 +6,13 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import bootsamples.dao.SeanceRepository;
 import bootsamples.exceptions.notFound.MyResourceNotFoundException;
 import bootsamples.model.Seance;
+import ch.qos.logback.classic.Logger;
 
 
 /**
@@ -134,7 +136,7 @@ public class SeanceService {
 	public Seance createSeance(Seance seance)
 	{
 		LOGGER.info("Create seance on for movie title = {} in cinema = {} at date = {}", seance.getMovie().getTitle(),
-			   seance.getCinema().getName()), seance.getDate();
+			   seance.getCinema().getName(), seance.getDate());
 		
 		cinemaService.findCinemaByName(seance.getCinema().getName());
 		movieService.findMovieByTitle(seance.getMovie().getTitle());

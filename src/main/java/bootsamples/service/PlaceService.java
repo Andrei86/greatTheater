@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import bootsamples.additional.Status;
@@ -17,6 +18,7 @@ import bootsamples.exceptions.LatenessCancelException;
 import bootsamples.exceptions.notFound.MyResourceNotFoundException;
 import bootsamples.model.Customer;
 import bootsamples.model.Place;
+import ch.qos.logback.classic.Logger;
 
 
 /**
@@ -210,7 +212,7 @@ public class PlaceService {
 	@Transactional
 	public Place createPlace(Place place)
 	{
-		LOGGER.info("Find place by id = {} ", id);
+		LOGGER.info("Create place for seance id = {} ", place.getSeance().getId());
 		
 		seanceService.findSeanceById(place.getSeance().getId());
 		return placeRepository.save(place);
@@ -227,7 +229,7 @@ public class PlaceService {
 	@Transactional
 	public List<Place> updatePlaces(List<Place> places) // ordinary places updating
 	{
-		LOGGER.info("Update places in quantity = {} ", places.length); // !!!!!!!!!!!!!!! solve in one string with list of ids
+		LOGGER.info("Update places in quantity = {} ", places.size()); // !!!!!!!!!!!!!!! solve in one string with list of ids
 		
 		return (List<Place>) placeRepository.save(places);
 
@@ -251,7 +253,7 @@ public class PlaceService {
 	@Transactional
 	public List<Place> bookingPlaces(List<Integer> placeIds, Integer customerId) // reservation
 	{
-		LOGGER.info("Booking places in quantity = {} by customer with id = {}", placeIds.length, customerId);
+		LOGGER.info("Booking places in quantity = {} by customer with id = {}", placeIds.size(), customerId);
 		
 		Customer customer = customerService.findCustomerById(customerId);
 
@@ -283,7 +285,7 @@ public class PlaceService {
 	@Transactional
 	public List<Place> cancellingPlaces(List<Integer> placeIds, Integer customerId) // cancellations?
 	{
-		LOGGER.info("Cancelling places in quantity = {} by customer with id = {}", placeIds.length, customerId);
+		LOGGER.info("Cancelling places in quantity = {} by customer with id = {}", placeIds.size(), customerId);
 		
 		List<Place> cancelPlaces = new ArrayList<>();
 
@@ -313,7 +315,7 @@ public class PlaceService {
 	@Transactional 
 	public List<Place> busyPlaces(List<Integer> placeIds, Integer customerId) {
 		
-		LOGGER.info("Busy places in quantity = {} by customer with id = {}", placeIds.length, customerId);
+		LOGGER.info("Busy places in quantity = {} by customer with id = {}", placeIds.size(), customerId);
 		
 		List<Place> busyPlaces = new ArrayList<>();
 
