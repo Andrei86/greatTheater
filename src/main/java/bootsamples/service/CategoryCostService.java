@@ -37,7 +37,7 @@ public class CategoryCostService {
 		this.categoryRepo = categoryRepo;
 	}
 	
-	@Cacheable(value = "category", key = "#category")
+	@Cacheable(value = "category"/*, key = "#category"*/)
 	public CategoryCost findCategoryCostByCategory(Category category) {
 		
 		LOGGER.info("Find CategoryCost by category = {} ", category.name());
@@ -51,7 +51,7 @@ public class CategoryCostService {
 		return categoryCost;
 	}
 	
-	@Cacheable(value = "category", key = "#id")
+	@Cacheable(value = "category"/*, key = "#id"*/)
 	public CategoryCost findCategoryCostById(Integer id) {
 		
 		LOGGER.info("Find CategoryCost by id = {} ", id);
@@ -64,7 +64,7 @@ public class CategoryCostService {
 		return categoryCost;
 	}
 
-	@Cacheable(value = "category")
+	@Cacheable(value = "categories")
 	public List<CategoryCost> findAllCategoryCosts(Pageable pageable) {
 		
 		LOGGER.info("Find all CategoryCosts");
@@ -79,7 +79,7 @@ public class CategoryCostService {
 	}
 	
 	@Transactional
-	@CacheEvict(value = "category", key = "#id")
+	@CacheEvict(value = "category"/*, key = "#id"*/)
 	public void deleteCategoryCostById(Integer id) {
 		
 		LOGGER.info("Delete CategoryCost by id = {} ", id);
@@ -114,11 +114,12 @@ public class CategoryCostService {
 	}
 	
 	@Transactional
-	@Caching( put = {
+	@CachePut(value = "categories")
+	/*@Caching( put = {
         @CachePut(value = "category", key = "#id"),
-        @CachePut(value = "category", key = "#category")
+        @CachePut(value = "categories", key = "#category")
 	
-	})
+	})*/
 	public CategoryCost updateCategoryCost(CategoryCost categoryCost) {
 		
 		LOGGER.info("Update CategoryCost with id = {}", categoryCost.getId());

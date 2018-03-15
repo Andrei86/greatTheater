@@ -1,5 +1,7 @@
 package bootsamples.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -20,7 +22,9 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name="category_cost") // сделать layers for that entity(repo, service, controller, dto)
-public class CategoryCost {
+public class CategoryCost implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	
 	public CategoryCost() {
 		super();

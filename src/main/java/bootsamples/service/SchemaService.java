@@ -1,19 +1,14 @@
 package bootsamples.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
-import javax.validation.ConstraintViolationException;
-
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import bootsamples.dao.CinemaSchemaRepository;
-import bootsamples.exceptions.IntegrityViolationException;
 import bootsamples.exceptions.duplicate.DuplicateEntityException;
 import bootsamples.exceptions.notFound.MyResourceNotFoundException;
 import bootsamples.model.CinemaSchema;
